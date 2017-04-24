@@ -10,14 +10,27 @@
 
 using namespace std;
 
+
+
 class inputNode {
 public:
+    inputNode(int value);
+    ~inputNode();
+
+
 private:
+    int value;
+    vector<double> weights;
 };
 
 class outputNode {
 public:
+    outputNode(double value, double expectedValue);
+    ~outputNode();
 private:
+    double value;
+    double expectedValue;
+
 };
 
 class network {
