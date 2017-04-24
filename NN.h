@@ -20,10 +20,16 @@ public:
 private:
 };
 
-class network {
+class NeuralNetwork {
 public:
     NeuralNetwork();
     ~NeuralNetwork();
+
+    void initializeInputs();
+    void initializeOutputs();
 private:
+    vector<inputNode> inputNodes;
+    vector<outputNode> outputNodes;
 };
+
 #endif
