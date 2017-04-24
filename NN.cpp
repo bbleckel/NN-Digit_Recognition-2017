@@ -1,20 +1,22 @@
 #include "NN.h"
+
 using namespace std;
 
 
 
 
+NeuralNetwork::NeuralNetwork() {
+    initializeInputs();
+    initializeOutputs();
+}
 
+void NeuralNetwork::initializeInputs() {
 
+}
 
+void NeuralNetwork::initializeOutputs() {
 
-
-
-
-
-
-
-
+}
 
 
 inputNode::inputNode(int value) {
