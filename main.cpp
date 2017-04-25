@@ -86,6 +86,7 @@ int main (int argc, char** argv) {
     int epochs;
     double learningRate;
 
+
     vector<DigitMap> trainingMaps;
     vector<int> trainingSolutions;
 
@@ -99,15 +100,14 @@ int main (int argc, char** argv) {
     } else {
 
         trainingFile = argv[1];
-        testFile = argv[2];
-        type = atoi(argv[3]);
-        inputNodes = atoi(argv[4]);
-        outputNodes = atoi(argv[5]);
-        epochs = atoi(argv[6]);
-        learningRate = atof(argv[7]);
+        // testFile = argv[2];
+        // type = atoi(argv[3]);
+        // inputNodes = atoi(argv[4]);
+        // outputNodes = atoi(argv[5]);
+        // epochs = atoi(argv[6]);
+        // learningRate = atof(argv[7]);
 
     }
-
     cout << "YOUR INPUT VALUES:" << endl;
     cout << "   trainingFile  =  " << trainingFile << endl;
     cout << "   testFile      =  " << testFile << endl;
