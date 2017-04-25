@@ -25,24 +25,36 @@ private:
 
 class outputNode {
 public:
-    outputNode(double value, double expectedValue);
+    outputNode(double value);
     ~outputNode();
 private:
     double value;
-    double expectedValue;
+    double expectedValue; //doesn't change
 
 };
 
 class NeuralNetwork {
 public:
-    NeuralNetwork();
+    NeuralNetwork(vector<vector<int> > trainingImages, vector<int> trainingKeys, double learningRate, int outputDim);
     ~NeuralNetwork();
 
-    void initializeInputs();
-    void initializeOutputs();
+    void train();
+    void test();
+
+    void initializeInputNodes();
+    void initializeOutputNodes();
+
+    void updateWeights(int imageIndex);
 private:
     vector<inputNode> inputNodes;
     vector<outputNode> outputNodes;
+
+    int epochs;
+
+    vector<vector<int> > trainingImages;
+    vector<int> trainingKeys;
+    double learningRate;
+    int outputDim;
 };
 
 #endif
