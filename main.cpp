@@ -6,8 +6,8 @@
 
 using namespace std;
 
-int type;
-string fileName;
+vector<vector<int>> maps;
+vector<int> solutions;
 
 
 void printInfo() {
@@ -26,17 +26,62 @@ void printInfo() {
 
 
 int main (int argc, char** argv) {
+    string trainingFile;
+    string testFile;
+    int type;
+    int inputNodes;
+    int outputNodes;
+    int epochs;
+    double learningRate;
+
+    vector<vector<int>> trainingMaps;
+    vector<int> trainingSolutions;
+
+    vector<vector<int>> testMaps;
+    vector<int> testSolutions;
+
+    if (argc != 8) {
+        // incorrect number of arguments
+        printInfo();
+    } else {
+
+        trainingFile = argv[1];
+        testFile = argv[2];
+        type = argv[3];
+        inputNodes = argv[4];
+        outputNodes = argv[5];
+        epochs = argv[6];
+        learningRate = argv[7];
+
+    }
+
+    cout << "YOUR INPUT VALUES:" << endl;
+    cout << "   trainingFile  =  " << trainingFile << endl;
+    cout << "   testFile      =  " << testFile << endl;
+    cout << "   type          =  " << type << endl;
+    cout << "   inputNodes    =  " << inputNodes << endl;
+    cout << "   outputNodes   =  " << outputNodes << endl;
+    cout << "   epochs        =  " << epochs << endl;
+    cout << "   learningRate  =  " << learningRate << endl;
+
+    readFile(trainingFile, type);
+    trainingMaps = maps;
+    trainingSolutions = solutions;
+    maps.clear();
+    solutions.clear();
+    readFile(testFile, type);
+    testMaps = maps;
+    testSolutions = solutions;
 
 
 }
 
 
-void readFile(string fileName) {
+void readFile(string fileName, int theType) {
     string line;
     ifstream inputFile;
     inputFile.open(fileName, ios::in);
-    vector<vector<int>> maps;
-    vector<int> solutions;
+    int type = theType;
 
     if(!inputFile.is_open()) {
         cerr << "ERROR: Could not open file" << endl;
