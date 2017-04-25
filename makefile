@@ -11,7 +11,7 @@ main.o: main.cpp NN.h
 	$(CC) -c main.cpp -o $@
 
 NN.o: NN.cpp NN.h
-	$(CC) -c ACO.cpp -o $@
+	$(CC) -c NN.cpp -o $@
 
 clean:
 	rm *.o
