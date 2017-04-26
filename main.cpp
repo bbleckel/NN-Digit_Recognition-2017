@@ -23,7 +23,7 @@ void printInfo() {
 	cout << "    epochs         = number of epochs (iterations) to perform (int)" << endl;
     cout << "    learningRate   = learning rate for network (double)" << endl;
     cout << "SAMPLE INPUTS:" << endl;
-    cout << "./main 32x32-bitmaps/optdigits-32x32.tra ./main 32x32-bitmaps/optdigits-32x32.tes 32" << endl;
+    cout << "./main 32x32-bitmaps/optdigits-32x32.tra 32x32-bitmaps/optdigits-32x32.tes 32" << endl;
     cout << "./main 8x8-integer-inputs/optdigits-8x8-int.tra 8x8-integer-inputs/optdigits-8x8-int.tes 8" << endl;
     cout << endl;
 }
@@ -93,6 +93,18 @@ void readFile(string fileName, int theType) {
             }
         }
     }
+    
+   // for(int i = 0; i < solutions.size(); i++) {
+   //     cout << solutions[i] << endl;
+   // }
+   // cout << solutions.size() << " solutions"<< endl;
+   // cout << maps.size() << " maps" << endl;
+    // for(int i = 0; i < maps[0].map.size(); i++) {
+    //     for(int j = 0; j < maps[0].map[i].size(); j++) {
+    //         cout << maps[0].map[i][j];
+    //     }
+    //     cout << "\n";
+    // }
 
 }
 
@@ -142,7 +154,9 @@ int main (int argc, char** argv) {
     // for training
     readFile(trainingFile, type);
     trainingMaps = maps;
-    trainingSolutions = solutions;
+    // trainingSolutions = solutions;
+    cout << trainingMaps.size() << " training maps" << endl;
+    // cout << trainingSolutions.size() << " training solutions" << endl;
 
     // clear globals
     maps.clear();
@@ -150,9 +164,11 @@ int main (int argc, char** argv) {
 
 
     // for testing
-    // readFile(testFile, type);
-    // testMaps = maps;
+    readFile(testFile, type);
+    testMaps = maps;
     // testSolutions = solutions;
+    cout << testMaps.size() << " test maps" << endl;
+    // cout << testSolutions.size() << " test solutions" << endl;
 
 
 }
