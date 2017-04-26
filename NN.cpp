@@ -44,14 +44,27 @@ NeuralNetwork::~NeuralNetwork() {
     
 }
 
+void NeuralNetwork::initializeWeights() {
+    weights.clear();
+    weights.push_back(1); // bias node
+    
+    // size - 1: bias node already added
+    for(int i = 0; i < inputNodes.size() - 1; i++) {
+        double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
+//        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
+        weights.push_back(randNum);
+    }
+    
+    cout << "Initialized: " << weights.size() << " versus " << inputNodes.size() << endl;
+}
+
 //create the vector of input nodes, each initialized to the value of the first image
 void NeuralNetwork::initializeInputNodes(DigitMap map) {
     inputNodes.clear();
-    weights.clear();
     
     inputNode biasNode = inputNode(1);
     inputNodes.push_back(biasNode);
-    weights.push_back(1);
+
     
     for(int i = 0; i < map.map.size(); i++) {
         for(int j = 0; j < map.map[i].size(); j++) {
@@ -59,12 +72,6 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
             inputNode node = inputNode(map.map[i][j]);
             inputNodes.push_back(node);
         }
-    }
-    
-    // size - 1: bias node already added
-    for(int i = 0; i < inputNodes.size() - 1; i++) {
-        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
-        weights.push_back(randNum);
     }
 }
 
@@ -87,15 +94,31 @@ void NeuralNetwork::initializeOutputNodes() {
 //    }
 }
 
+void NeuralNetwork::printArrayAs2D(vector<double> list) {
+    for(int i = 0; i < list.size(); i++) {
+        if(i % trainingMaps[0].map.size() == 0) {
+            cout << endl;
+        }
+//        int row; // corresponds to y coord.
+//        int col; // corresponds to x coord.
+//        row = floor(i / trainingMaps[imageIndex].map.size());
+//        col = i - row * trainingMaps[imageIndex].map.size();
+        cout << list[i] << " ";
+    }
+}
+
+
 void NeuralNetwork::updateWeights(int imageIndex) {
     double sum = activationSum();
     double output = floor(g(sum) * 10);
-//    cout << sum << endl;
+//    double output = g(sum);
+    double deriv = g_prime(sum);
     if(output == trainingMaps[imageIndex].value) {
         correctCount++;
     }
     totalCount++;
-//    cout << "Result is " << output << ", real is " << trainingMaps[imageIndex].value << endl;
+    cout << sum << endl;
+    cout << "Result is " << output << ", real is " << trainingMaps[imageIndex].value << ", deriv is " << deriv << endl;
     
 //    cout << "derivative is " << g_prime(sum) << " versus " << g(sum) << endl;
     
@@ -109,16 +132,15 @@ void NeuralNetwork::updateWeights(int imageIndex) {
 //        cout << "(row, col) " << row << ", " << col << endl;
         
 //        cout << "Initial weight = " << weights[i] << endl;
-        double error = pow(trainingMaps[imageIndex].value - output, 2);
-//        double error = trainingMaps[imageIndex].value - output;
-
+        double error = trainingMaps[imageIndex].value - output;
 //        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
-        double update = learningRate * error * g_prime(sum) * trainingMaps[imageIndex].map[col][row]; // times value?
-        
+        double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
+//        double update = learningRate * error * deriv;
+//        cout << "deriv of " << sum << " is = " << deriv << endl;
 //        cout << "e = " << error << ", update = " << update << endl;
         
         update += weights[i];
-        weights[i] += update;
+        weights[i] = update;
 //        cout << "New weight = " << weights[i] << endl;;
     }
     
@@ -131,16 +153,19 @@ void NeuralNetwork::test() {
 //train the network
 void NeuralNetwork::train() {
 
-//    initializeInputNodes(); //create vector of input nodes
+    initializeInputNodes(trainingMaps[0]); //create vector of input nodes
     initializeOutputNodes(); //create vector of output nodes
-    
+    initializeWeights();
+    printArrayAs2D(weights);
+
+
     for (int e = 0; e < epochs; e++) {
-        cout << "Epoch " << e << endl;
+        cout << "Epoch " << e + 1 << endl;
         correctCount = 0;
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
 
-//        for (int i = 0; i < 10; i++) {
+//        for (int i = 0; i < 4; i++) {
 //            cout << "Training epoch " << e << ", map " << i << endl;
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
             //update weights
@@ -165,21 +190,47 @@ double NeuralNetwork::activationSum() {
 }
 
 double NeuralNetwork::g(double x) {
+    cout << "g for " << x << endl;
+    if(x > 200) {
+        // avoid nan
+        cout << "g returning 1" << endl;
+        return 1;
+    }
+
     // activation function
     double b = 0.5 - x;
+    cout << "b = " << b << endl;
     double e = exp(b);
+    cout << "e = " << e << endl;
+
     double r = 1 + e;
+    cout << "r = " << r << endl;
+
     double result = pow(r, -1);
-    
+    cout << "result = " << result << endl;
+
     return result;
 }
 
 double NeuralNetwork::g_prime(double x) {
+    if(x > 200) {
+        cout << "deriv returning 1 " << endl;
+        // avoid nan
+        return 0;
+    }
     // derivative of activation function
+//    cout << "for " << x << endl;
     double e = exp(x);
+//    cout << "e = " << e << endl;
     double numerator = sqrt(exp(1)) * e;
+//    cout << "num = " << numerator << endl;
+
     double denominator = pow(sqrt(exp(1)) + e, 2);
+//    cout << "denom = " << denominator << endl;
+
     double result = numerator / denominator;
+//    cout << "result = " << result << endl;
+
 
     return result;
 }

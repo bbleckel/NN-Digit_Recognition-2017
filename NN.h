@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <math.h>
+#include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -50,6 +51,7 @@ public:
     
     void initializeInputNodes(DigitMap map);
     void initializeOutputNodes();
+    void initializeWeights();
     
     void updateWeights(int imageIndex);
 private:
@@ -61,6 +63,7 @@ private:
     
     vector<DigitMap> trainingMaps;
     
+    void printArrayAs2D(vector<double> list);
     double activationSum();
     double g(double x);
     double g_prime(double x);
