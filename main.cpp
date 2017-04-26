@@ -23,7 +23,7 @@ void printInfo() {
 	cout << endl;
 }
 
-void readFile(string fileName) {
+vector<DigitMap> readFile(string fileName) {
     string line;
     ifstream inputFile;
     inputFile.open(fileName, ios::in);
@@ -63,27 +63,24 @@ void readFile(string fileName) {
             }
         }
     }
-    
-//    for(int i = 0; i < solutions.size(); i++) {
-//        cout << solutions[i] << endl;
-//    }
-//    cout << solutions.size() << endl;
-    for(int i = 0; i < maps[0].map.size(); i++) {
-        for(int j = 0; j < maps[0].map[i].size(); j++) {
-            cout << maps[0].map[i][j];
-        }
-        cout << "\n";
-    }
-    
+    return maps;
 }
 
 int main (int argc, char** argv) {
+    srand(time(NULL));
     if(argc != 2) {
         // incorrect input
         printInfo();
         exit(1);
     } else {
+        vector<DigitMap> maps;
+
         string fileName = argv[1];
-        readFile(fileName);
+        maps = readFile(fileName);
+        
+        cout << "Successfully read file:\n" << maps.size() << " maps, dimension " << maps[0].map[0].size() << "x" << maps[0].map[0].size() << endl;
+        
+        NeuralNetwork n = NeuralNetwork(maps, 10, 0.01, 1);
+        n.train();
     }
 }

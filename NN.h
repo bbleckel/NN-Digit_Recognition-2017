@@ -20,56 +20,53 @@ public:
 };
 
 
-//
-//
-//
-//class inputNode {
-//public:
-//    inputNode(int value);
-//    ~inputNode();
-//
-//
-//private:
-//    int value;
-//    vector<double> weights;
-//};
-//
-//class outputNode {
-//public:
-//    outputNode(double value);
-//    ~outputNode();
-//private:
-//    double value;
-//    double expectedValue; //doesn't change
-//
-//};
-//
-//class NeuralNetwork {
-//public:
-//    NeuralNetwork(vector<vector<int> > trainingImages, vector<int> trainingKeys, double learningRate, int outputDim);
-//    ~NeuralNetwork();
-//
-//    void train();
-//    void test();
-//
-//    void initializeInputNodes();
-//    void initializeOutputNodes();
-//
-//    void updateWeights(int imageIndex);
-//private:
-//    vector<inputNode> inputNodes;
-//    vector<outputNode> outputNodes;
-//
-//    int epochs;
-//
-//    vector<vector<int> > trainingImages;
-//    vector<int> trainingKeys;
-//    double learningRate;
-//    int outputDim;
-//    
-//    void backPropagate();
-//    void runEpoch();
-//    void feedForward();
-//};
-//
+class inputNode {
+public:
+    inputNode(int value);
+    ~inputNode();
+    
+    int value;
+};
+
+class outputNode {
+public:
+    outputNode(double value);
+    ~outputNode();
+    vector<double> weights;
+
+private:
+    double value;
+    double expectedValue; //doesn't change
+    
+};
+
+class NeuralNetwork {
+public:
+    NeuralNetwork(vector<DigitMap> trainingMaps, int epochs, double learningRate, int outputDim);
+    ~NeuralNetwork();
+    
+    void train();
+    void test();
+    
+    void initializeInputNodes(DigitMap map);
+    void initializeOutputNodes();
+    
+    void updateWeights(int imageIndex);
+private:
+    vector<inputNode> inputNodes;
+    vector<outputNode> outputNodes;
+    vector<double> weights;
+    
+    int epochs;
+    
+    vector<DigitMap> trainingMaps;
+    
+    double activationSum();
+    double g(double x);
+    double g_prime(double x);
+    
+    double learningRate;
+    int outputDim;
+};
+
 #endif
