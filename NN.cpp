@@ -47,7 +47,7 @@ NeuralNetwork::~NeuralNetwork() {
 //create the vector of input nodes, each initialized to the value of the first image
 void NeuralNetwork::initializeInputNodes(DigitMap map) {
     inputNodes.clear();
-    weights.clear();
+    // weights.clear();
 
     inputNode biasNode = inputNode(1);
     inputNodes.push_back(biasNode);
@@ -135,7 +135,9 @@ void NeuralNetwork::updateWeights(int imageIndex) {
 }
 
 void NeuralNetwork::test() {
+    for (int i = 0; i < testMaps.size; i++) {
 
+    }
 }
 
 //train the network
@@ -153,6 +155,7 @@ void NeuralNetwork::train() {
 //        for (int i = 0; i < 10; i++) {
 //            cout << "Training epoch " << e << ", map " << i << endl;
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
+
             //update weights
             updateWeights(i);
 
