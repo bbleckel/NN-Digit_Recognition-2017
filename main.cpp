@@ -93,7 +93,7 @@ void readFile(string fileName, int theType) {
             }
         }
     }
-    
+
    // for(int i = 0; i < solutions.size(); i++) {
    //     cout << solutions[i] << endl;
    // }
@@ -112,8 +112,8 @@ int main (int argc, char** argv) {
     string trainingFile;
     string testFile;
     int type;
-    int inputNodes;
-    int outputNodes;
+    int numInputNodes;
+    int numOutputNodes;
     int epochs;
     double learningRate;
 
@@ -135,8 +135,8 @@ int main (int argc, char** argv) {
         trainingFile = argv[1];
         testFile = argv[2];
         type = atoi(argv[3]);
-        // inputNodes = atoi(argv[4]);
-        // outputNodes = atoi(argv[5]);
+        // numInputNodes = atoi(argv[4]);
+        // numOutputNodes = atoi(argv[5]);
         // epochs = atoi(argv[6]);
         // learningRate = atof(argv[7]);
 
@@ -145,8 +145,8 @@ int main (int argc, char** argv) {
     cout << "   trainingFile  =  " << trainingFile << endl;
     cout << "   testFile      =  " << testFile << endl;
     cout << "   type          =  " << type << endl;
-    cout << "   inputNodes    =  " << inputNodes << endl;
-    cout << "   outputNodes   =  " << outputNodes << endl;
+    cout << "   inputNodes    =  " << numInputNodes << endl;
+    cout << "   outputNodes   =  " << numOutputNodes << endl;
     cout << "   epochs        =  " << epochs << endl;
     cout << "   learningRate  =  " << learningRate << endl;
 
@@ -169,7 +169,7 @@ int main (int argc, char** argv) {
 //    // testSolutions = solutions;
 //    cout << testMaps.size() << " test maps" << endl;
 //    // cout << testSolutions.size() << " test solutions" << endl;
-    
+
     NeuralNetwork n = NeuralNetwork(trainingMaps, 50, 1.0, 1);
     n.train();
 
