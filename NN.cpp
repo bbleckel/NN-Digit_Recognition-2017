@@ -8,7 +8,7 @@ DigitMap::DigitMap(int value, vector<vector<int> > map) {
 }
 
 DigitMap::~DigitMap() {
-    
+
 }
 
 inputNode::inputNode(int value) {
@@ -126,6 +126,7 @@ void NeuralNetwork::test() {
 
 //train the network
 void NeuralNetwork::train() {
+
 //    initializeInputNodes(); //create vector of input nodes
     initializeOutputNodes(); //create vector of output nodes
     
