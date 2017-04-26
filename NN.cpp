@@ -8,7 +8,7 @@ DigitMap::DigitMap(int value, vector<vector<int> > map) {
 }
 
 DigitMap::~DigitMap() {
-    
+
 }
 
 //NeuralNetwork::NeuralNetwork(vector<vector<int> > trainingImages, vector<int> trainingKeys, int epochs double learningRate, int outputDim) {
@@ -82,7 +82,7 @@ DigitMap::~DigitMap() {
 //}
 //
 //void NeuralNetwork::test() {
-//    
+//
 //}
 //
 ////train the network
