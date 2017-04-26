@@ -67,6 +67,8 @@ private:
     
     double learningRate;
     int outputDim;
+    int correctCount;
+    int totalCount;
 };
 
 #endif

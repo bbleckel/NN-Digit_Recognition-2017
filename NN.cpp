@@ -36,6 +36,8 @@ NeuralNetwork::NeuralNetwork(vector<DigitMap> trainingMaps, int epochs, double l
     this->epochs = epochs;
     this->learningRate = learningRate;
     this->outputDim = outputDim;
+    correctCount = 0;
+    totalCount = 0;
 }
 
 NeuralNetwork::~NeuralNetwork() {
@@ -89,28 +91,30 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     double sum = activationSum();
     double output = floor(g(sum) * 10);
 //    cout << sum << endl;
-    cout << "Result is " << output << ", real is " << trainingMaps[imageIndex].value << endl;
+    if(output == trainingMaps[imageIndex].value) {
+        correctCount++;
+    }
+    totalCount++;
+//    cout << "Result is " << output << ", real is " << trainingMaps[imageIndex].value << endl;
     
 //    cout << "derivative is " << g_prime(sum) << " versus " << g(sum) << endl;
     
     for(int i = 0; i < weights.size(); i++) {
 //        cout << "At " << i << endl;
-        int row;
-        int col;
+        int row; // corresponds to y coord.
+        int col; // corresponds to x coord.
         row = floor(i / trainingMaps[imageIndex].map.size());
         col = i - row * trainingMaps[imageIndex].map.size();
         
 //        cout << "(row, col) " << row << ", " << col << endl;
         
-        // SQUARE THIS?
 //        cout << "Initial weight = " << weights[i] << endl;
         double error = pow(trainingMaps[imageIndex].value - output, 2);
-        double update = learningRate * error * g_prime(sum); // times value?
+//        double error = trainingMaps[imageIndex].value - output;
+
+//        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
+        double update = learningRate * error * g_prime(sum) * trainingMaps[imageIndex].map[col][row]; // times value?
         
-        if(update > 10000 || update < -10000) {
-            cout << "PROBLEM" << endl;
-            return;
-        }
 //        cout << "e = " << error << ", update = " << update << endl;
         
         update += weights[i];
@@ -131,18 +135,25 @@ void NeuralNetwork::train() {
     initializeOutputNodes(); //create vector of output nodes
     
     for (int e = 0; e < epochs; e++) {
-        cout << "New epoch" << endl;
-//        for (int i = 0; i < trainingMaps.size(); i++) {
-        for (int i = 0; i < 10; i++) {
+        cout << "Epoch " << e << endl;
+        correctCount = 0;
+        totalCount = 0;
+        for (int i = 0; i < trainingMaps.size(); i++) {
+
+//        for (int i = 0; i < 10; i++) {
 //            cout << "Training epoch " << e << ", map " << i << endl;
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
             //update weights
             updateWeights(i);
+
         }
+        cout << "Correct classifications: " << correctCount << endl;
+        cout << "Total classifications: " << totalCount << endl;
+        cout << "Ratio: " << correctCount / (double) totalCount << endl;
     }
 }
 
-double NeuralNetwork::activationSum() {    
+double NeuralNetwork::activationSum() {
     double sum = 0;
     
     // sum all inputs and weights
