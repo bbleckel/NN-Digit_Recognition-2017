@@ -50,7 +50,7 @@ void NeuralNetwork::initializeWeights() {
     for(int i = 0; i < outputDim; i++) {
         vector<double> tempWeights;
         tempWeights.push_back(1); // bias node
-        
+
         // size - 1: bias node already added
         for(int i = 0; i < inputNodes.size() - 1; i++) {
             double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
@@ -139,27 +139,27 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         //    double output = g(sum);
         double deriv = g_prime(sum);
         double error = trainingMaps[imageIndex].value - output;
-        
+
         // update bias node (first in weights)
         double biasWeight = weights[j][0];
         double biasUpdate = learningRate * error * deriv;
         weights[j][0] += biasUpdate;
-        
+
         for(int i = 1; i < weights[j].size(); i++) {
             //        cout << "At " << i << endl;
             int row; // corresponds to y coord.
             int col; // corresponds to x coord.
             row = floor(i / trainingMaps[imageIndex].map.size());
             col = i - row * trainingMaps[imageIndex].map.size();
-            
+
             //        cout << "(row, col) " << row << ", " << col << endl;
             if(trainingMaps[imageIndex].map[col][row] == 1) {
 //                cout << "Initial weight = " << weights[j][i] << ", sum = " << sum << ", g = " << g(sum) << endl;
             }
             //        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
             double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
-            
-            
+
+
             update += weights[j][i];
             weights[j][i] = update;
             if(trainingMaps[imageIndex].map[col][row] == 1) {
@@ -205,11 +205,11 @@ void NeuralNetwork::test() {
 //            totalDigits[testMaps[i].value]++;
 //        }
     }
-    
+
     cout << endl << "Tested " << testMaps.size() << " images on the Network." << endl;
     cout << "Correctly classified " << correctTestCount << " (";
     cout << ((double)correctTestCount/(double)testMaps.size())*100.0 << "\%)." << endl << endl;
-    
+
     cout << "Table of correctly classified digits vs total digit count:" << endl;
     for (int i = 0; i < digitsClassified.size(); i++) {
         cout << "--------|--------\t-------" << endl;
@@ -240,7 +240,7 @@ void NeuralNetwork::train() {
 
             //update weights
             updateWeights(i);
-            
+
             double max = 0;
             int result = -1;
             for(int p = 0; p < outputNodes.size(); p++) {
@@ -255,7 +255,7 @@ void NeuralNetwork::train() {
                 correctCount++;
             }
             totalCount++;
-        
+
         }
         cout << "Correct classifications: " << correctCount << endl;
         cout << "Total classifications: " << totalCount << endl;

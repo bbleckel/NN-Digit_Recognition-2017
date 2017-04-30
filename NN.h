@@ -64,7 +64,6 @@ private:
     int epochs;
 
     vector<DigitMap> trainingMaps;
-
     vector<DigitMap> testMaps;
 
     double activationSum(int index);
