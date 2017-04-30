@@ -65,7 +65,6 @@ private:
 
     vector<DigitMap> trainingMaps;
 
-
     vector<DigitMap> testMaps;
 
     double activationSum(int index);

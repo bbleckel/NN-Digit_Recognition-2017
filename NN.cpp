@@ -78,13 +78,14 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
     }
 }
 
+// initialize the output vector based on the correct answer value for the image
 void NeuralNetwork::initializeOutput(double answerVal) {
     outputVect.clear();
     correctOutputVect.clear();
     if (outputDim == 10) {
         for(int i = 0; i < outputDim; i++) {
             int expected;
-            if (outputDim == answerVal) {
+            if (i == answerVal) {
                 expected = 1;
             } else {
                 expected = 0;
@@ -99,7 +100,6 @@ void NeuralNetwork::initializeOutput(double answerVal) {
         outputVect.push_back(0.0);
     }
 }
-
 
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes() {
@@ -132,20 +132,20 @@ void NeuralNetwork::initializeOutputNodes() {
     //     outputNode node = outputNode();
     //     outputNodes.push_back(node);
     // }
-//    if (outputDim == 10) {
-//        for (int i = 0; i < outputDim; i++) {
-//            outputNode node;
-//            if (i == key[0]) {
-//                node = outputNode(1.0);
-//            } else {
-//                node = outputNode(0.0);
-//            }
-//
-//            outputNodes.push_back(node);
-//        }
-//    } else {
-//        outputNode node = outputNode((double)key[0]/10);
-//    }
+   // if (outputDim == 10) {
+   //     for (int i = 0; i < outputDim; i++) {
+   //         outputNode node;
+   //         if (i == key[0]) {
+   //             node = outputNode(1.0);
+   //         } else {
+   //             node = outputNode(0.0);
+   //         }
+   //
+   //         outputNodes.push_back(node);
+   //     }
+   // } else {
+   //     outputNode node = outputNode((double)key[0]/10);
+   // }
 }
 
 void NeuralNetwork::printArrayAs2D(vector<double> list) {
