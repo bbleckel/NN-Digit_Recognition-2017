@@ -65,12 +65,7 @@ private:
     int epochs;
 
     vector<DigitMap> trainingMaps;
-<<<<<<< HEAD
 
-
-    void printArrayAs2D(vector<double> list);
-=======
->>>>>>> origin/master
     vector<DigitMap> testMaps;
 
     void printArrayAs2D(vector<double> list);
