@@ -20,9 +20,9 @@ inputNode::~inputNode(){
 }
 
 
-outputNode::outputNode(double value) {
+outputNode::outputNode(double value, double expected) {
     this->value = value;
-    this->expectedValue = value;
+    this->expectedValue = expected;
 }
 
 outputNode::~outputNode() {
@@ -102,16 +102,21 @@ void NeuralNetwork::initializeOutput(double answerVal) {
 }
 
 //initialize the output node(s) based on the outputDim
-void NeuralNetwork::initializeOutputNodes() {
+void NeuralNetwork::initializeOutputNodes(int answer) {
     outputNodes.clear();
     int initValue; // whatever we're initializing the values to
     if (outputDim == 10) {
         for (int i = 0; i < outputDim; i++) {
-            outputNode node = outputNode(i);
-            outputNodes.push_back(node);
+            if(i == answer) {
+                outputNode node = outputNode(i, 1);
+                outputNodes.push_back(node);
+            } else {
+                outputNode node = outputNode(i, 0);
+                outputNodes.push_back(node);
+            }
         }
     } else { //outputDim = 1
-        outputNode node = outputNode(0);
+        outputNode node = outputNode(0, answer);
         outputNodes.push_back(node);
     }
 }
@@ -138,7 +143,8 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         outputNodes[j].value = output;
         //    double output = g(sum);
         double deriv = g_prime(sum);
-        double error = trainingMaps[imageIndex].value - output;
+        double error = outputNodes[j].expectedValue - output;
+//        cout << "For " << j << ", correct = " << outputNodes[j].expectedValue << ", output = " << output << endl;
 
         // update bias node (first in weights)
         double biasWeight = weights[j][0];
@@ -146,7 +152,6 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         weights[j][0] += biasUpdate;
 
         for(int i = 1; i < weights[j].size(); i++) {
-            //        cout << "At " << i << endl;
             int row; // corresponds to y coord.
             int col; // corresponds to x coord.
             row = floor(i / trainingMaps[imageIndex].map.size());
@@ -180,9 +185,22 @@ void NeuralNetwork::test() {
         for(int n = 0; n < outputDim; n++) {
             for (int i = 0; i < testMaps.size(); i++) {
                 initializeInputNodes(testMaps[i]);
+                initializeOutputNodes(testMaps[i].value);
                 
                 double sum = activationSum(n);
                 double output = g(sum);
+                
+                double max = 0;
+                int result = -1;
+                for(int p = 0; p < outputNodes.size(); p++) {
+                    if(outputNodes[p].value > max) {
+                        max = outputNodes[p].value;
+                        result = p;
+                    }
+                }
+                
+                
+
                 
                 if (output == testMaps[i].value) {
                     digitsClassified[testMaps[i].value]++;
@@ -220,9 +238,8 @@ void NeuralNetwork::test() {
 
 //train the network
 void NeuralNetwork::train() {
-
+    initializeOutputNodes(-1); //create vector of output nodes
     initializeInputNodes(trainingMaps[0]); //create vector of input nodes
-    initializeOutputNodes(); //create vector of output nodes
     initializeWeights();
 //    for(int i = 0; i < weights.size(); i++) {
 //        printArrayAs2D(weights[i]);
@@ -234,8 +251,8 @@ void NeuralNetwork::train() {
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
 
-    //    for (int i = 0; i < 4; i++) {
-        //    cout << "Training epoch " << e << ", map " << i << endl;
+//        for (int i = 0; i < 4; i++) {
+            initializeOutputNodes(trainingMaps[i].value); //create vector of output nodes
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
 
             //update weights
@@ -250,7 +267,7 @@ void NeuralNetwork::train() {
                     result = p;
                 }
             }
-            cout << "Max is " << result << endl;
+//            cout << "Max is " << result << endl;
             if(result == trainingMaps[i].value) {
                 correctCount++;
             }

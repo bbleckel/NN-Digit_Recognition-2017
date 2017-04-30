@@ -31,7 +31,7 @@ public:
 
 class outputNode {
 public:
-    outputNode(double value);
+    outputNode(double value, double expected);
     ~outputNode();
     vector<double> weights;
     double value;
@@ -48,7 +48,7 @@ public:
     void test();
 
     void initializeInputNodes(DigitMap map);
-    void initializeOutputNodes();
+    void initializeOutputNodes(int answer);
     void initializeOutput(double answerVal);
     void initializeWeights();
 
