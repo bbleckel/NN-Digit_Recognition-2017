@@ -170,7 +170,7 @@ int main (int argc, char** argv) {
 //    cout << testMaps.size() << " test maps" << endl;
 //    // cout << testSolutions.size() << " test solutions" << endl;
     
-    NeuralNetwork n = NeuralNetwork(trainingMaps, 50, 0.1, 1);
+    NeuralNetwork n = NeuralNetwork(trainingMaps, 50, 0.01, 10);
     n.train();
 
 
