@@ -181,29 +181,25 @@ void NeuralNetwork::test() {
     vector<int> totalDigits(10, 0);
 
     if(outputDim == 10) {
-        double max = 0;
-        for(int n = 0; n < outputDim; n++) {
-            for (int i = 0; i < testMaps.size(); i++) {
-                initializeOutputNodes(testMaps[i].value);
-                initializeInputNodes(testMaps[i]);
-                double max = INT_MIN;
-                int digitClass = -1;
-                for (int n = 0; n < outputDim; n++) {
-                    double sum = activationSum(n);
-                    double output = g(sum);
-                    
-                    if (output > max) {
-                        max = output;
-                        digitClass = n;
-                    }
+        for (int i = 0; i < testMaps.size(); i++) {
+            initializeInputNodes(testMaps[i]);
+            double max = INT_MIN;
+            int digitClass = -1;
+            for (int n = 0; n < outputDim; n++) {
+                double sum = activationSum(n);
+                double output = g(sum);
+
+                if (output > max) {
+                    max = output;
+                    digitClass = n;
                 }
-                
-                if (digitClass == testMaps[i].value) {
-                    digitsClassified[testMaps[i].value]++;
-                    correctTestCount++;
-                }
-                totalDigits[testMaps[i].value]++;
             }
+
+            if (digitClass == testMaps[i].value) {
+                digitsClassified[testMaps[i].value]++;
+                correctTestCount++;
+            }
+            totalDigits[testMaps[i].value]++;
         }
     } else {
         //        for (int i = 0; i < testMaps.size(); i++) {
@@ -219,7 +215,7 @@ void NeuralNetwork::test() {
         //            totalDigits[testMaps[i].value]++;
         //        }
     }
-    
+
     cout << endl << "Tested " << testMaps.size() << " images on the Network." << endl;
     cout << "Correctly classified " << correctTestCount << " (";
     cout << ((double)correctTestCount/(double)testMaps.size())*100.0 << "\%)." << endl << endl;
