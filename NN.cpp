@@ -176,7 +176,6 @@ void NeuralNetwork::test() {
     vector<int> totalDigits(10, 0);
 
     if(outputDim == 10) {
-        double max = 0;
         for (int i = 0; i < testMaps.size(); i++) {
             initializeInputNodes(testMaps[i]);
             double max = INT_MIN;
@@ -256,7 +255,7 @@ void NeuralNetwork::train() {
                     result = p;
                 }
             }
-            cout << "Max is " << result << endl;
+            cout << "Max is " << result << ", Correct is " << trainingMaps[i].value << endl;
             if(result == trainingMaps[i].value) {
                 correctCount++;
             }
