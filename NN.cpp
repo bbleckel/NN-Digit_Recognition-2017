@@ -47,14 +47,14 @@ NeuralNetwork::~NeuralNetwork() {
 void NeuralNetwork::initializeWeights() {
     weights.clear();
     weights.push_back(1); // bias node
-    
+
     // size - 1: bias node already added
     for(int i = 0; i < inputNodes.size() - 1; i++) {
         double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
-//        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
+        //double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
         weights.push_back(randNum);
     }
-    
+
     cout << "Initialized: " << weights.size() << " versus " << inputNodes.size() << endl;
 }
 
@@ -74,33 +74,55 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
     }
 }
 
+void NeuralNetwork::initializeOutput(double answerVal) {
+    outputVect.clear();
+    correctOutputVect.clear();
+    if (outputDim == 10) {
+        for(int i = 0; i < outputDim; i++) {
+            int expected;
+            if (outputDim == answerVal) {
+                expected = 1;
+            } else {
+                expected = 0;
+            }
+            correctOutputVect.push_back(expected);
+            outputVect.push_back(0);
+        }
+
+    } else { // outputDim = 1
+        double expected = answerVal / 10;
+        correctOutputVect.push_back(expected);
+        outputVect.push_back(0.0);
+    }
+}
+
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes() {
-    outputNodes.clear();
-    int initValue; // whatever we're initializing the values to
-    if (outputDim == 10) {
-        for (int i = 0; i < outputDim; i++) {
-            outputNode node = outputNode();
-            outputNodes.push_back(node);
-        }
-    } else { //outputDim = 1
-        outputNode node = outputNode();
-        outputNodes.push_back(node);
-    }
-//    if (outputDim == 10) {
-//        for (int i = 0; i < outputDim; i++) {
-//            outputNode node;
-//            if (i == key[0]) {
-//                node = outputNode(1.0);
-//            } else {
-//                node = outputNode(0.0);
-//            }
-//
-//            outputNodes.push_back(node);
-//        }
-//    } else {
-//        outputNode node = outputNode((double)key[0]/10);
-//    }
+    // outputNodes.clear();
+    // int initValue; // whatever we're initializing the values to
+    // if (outputDim == 10) {
+    //     for (int i = 0; i < outputDim; i++) {
+    //         outputNode node = outputNode();
+    //         outputNodes.push_back(node);
+    //     }
+    // } else { // outputDim = 1
+    //     outputNode node = outputNode();
+    //     outputNodes.push_back(node);
+    // }
+   // if (outputDim == 10) {
+   //     for (int i = 0; i < outputDim; i++) {
+   //         outputNode node;
+   //         if (i == key[0]) {
+   //             node = outputNode(1.0);
+   //         } else {
+   //             node = outputNode(0.0);
+   //         }
+   //
+   //         outputNodes.push_back(node);
+   //     }
+   // } else {
+   //     outputNode node = outputNode((double)key[0]/10);
+   // }
 }
 
 void NeuralNetwork::printArrayAs2D(vector<double> list) {
@@ -108,10 +130,10 @@ void NeuralNetwork::printArrayAs2D(vector<double> list) {
         if(i % trainingMaps[0].map.size() == 0) {
             cout << endl;
         }
-//        int row; // corresponds to y coord.
-//        int col; // corresponds to x coord.
-//        row = floor(i / trainingMaps[imageIndex].map.size());
-//        col = i - row * trainingMaps[imageIndex].map.size();
+    //    int row; // corresponds to y coord.
+    //    int col; // corresponds to x coord.
+    //    row = floor(i / trainingMaps[imageIndex].map.size());
+    //    col = i - row * trainingMaps[imageIndex].map.size();
         cout << list[i] << " ";
     }
 }
@@ -120,7 +142,7 @@ void NeuralNetwork::printArrayAs2D(vector<double> list) {
 void NeuralNetwork::updateWeights(int imageIndex) {
     double sum = activationSum();
     double output = floor(g(sum) * 10);
-//    double output = g(sum);
+    // double output = g(sum);
     double deriv = g_prime(sum);
     if(output == trainingMaps[imageIndex].value) {
         correctCount++;
@@ -128,23 +150,23 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     totalCount++;
 
     for(int i = 0; i < weights.size(); i++) {
-//        cout << "At " << i << endl;
+    //    cout << "At " << i << endl;
         int row; // corresponds to y coord.
         int col; // corresponds to x coord.
         row = floor(i / trainingMaps[imageIndex].map.size());
         col = i - row * trainingMaps[imageIndex].map.size();
 
-//        cout << "(row, col) " << row << ", " << col << endl;
+    //    cout << "(row, col) " << row << ", " << col << endl;
 
-//        cout << "Initial weight = " << weights[i] << endl;
+    //    cout << "Initial weight = " << weights[i] << endl;
         double error = trainingMaps[imageIndex].value - output;
-//        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
+    //    cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
         double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
 
 
         update += weights[i];
         weights[i] = update;
-//        cout << "New weight = " << weights[i] << endl;;
+    //    cout << "New weight = " << weights[i] << endl;;
     }
 
 }
@@ -169,8 +191,8 @@ void NeuralNetwork::train() {
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
 
-//        for (int i = 0; i < 4; i++) {
-//            cout << "Training epoch " << e << ", map " << i << endl;
+    //    for (int i = 0; i < 4; i++) {
+        //    cout << "Training epoch " << e << ", map " << i << endl;
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
 
             //update weights
@@ -223,17 +245,17 @@ double NeuralNetwork::g_prime(double x) {
         return 0;
     }
     // derivative of activation function
-//    cout << "for " << x << endl;
+   // cout << "for " << x << endl;
     double e = exp(x);
-//    cout << "e = " << e << endl;
+   // cout << "e = " << e << endl;
     double numerator = sqrt(exp(1)) * e;
-//    cout << "num = " << numerator << endl;
+   // cout << "num = " << numerator << endl;
 
     double denominator = pow(sqrt(exp(1)) + e, 2);
-//    cout << "denom = " << denominator << endl;
+   // cout << "denom = " << denominator << endl;
 
     double result = numerator / denominator;
-//    cout << "result = " << result << endl;
+   // cout << "result = " << result << endl;
 
 
     return result;

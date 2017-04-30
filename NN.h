@@ -51,6 +51,7 @@ public:
 
     void initializeInputNodes(DigitMap map);
     void initializeOutputNodes();
+    void initializeOutput(double answerVal);
     void initializeWeights();
 
     void updateWeights(int imageIndex);
@@ -58,11 +59,14 @@ private:
     vector<inputNode> inputNodes;
     vector<outputNode> outputNodes;
     vector<double> weights;
+    vector<double> outputVect;
+    vector<double> correctOutputVect;
 
     int epochs;
 
     vector<DigitMap> trainingMaps;
-    
+
+
     void printArrayAs2D(vector<double> list);
     vector<DigitMap> testMaps;
 
