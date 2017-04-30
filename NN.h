@@ -34,8 +34,6 @@ public:
     outputNode(double value);
     ~outputNode();
     vector<double> weights;
-
-private:
     double value;
     double expectedValue; //doesn't change
 
@@ -58,7 +56,8 @@ public:
 private:
     vector<inputNode> inputNodes;
     vector<outputNode> outputNodes;
-    vector<double> weights;
+
+    vector<vector<double> > weights;
     vector<double> outputVect;
     vector<double> correctOutputVect;
 
@@ -67,9 +66,9 @@ private:
     vector<DigitMap> trainingMaps;
     vector<DigitMap> testMaps;
 
+    double activationSum(int index);
     void printArrayAs2D(vector<double> list);
 
-    double activationSum();
     double g(double x);
     double g_prime(double x);
 
