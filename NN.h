@@ -41,7 +41,7 @@ public:
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(vector<DigitMap> trainingMaps, int epochs, double learningRate, int outputDim);
+    NeuralNetwork(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps, int epochs, double learningRate, int outputDim);
     ~NeuralNetwork();
 
     void train();
@@ -49,22 +49,28 @@ public:
 
     void initializeInputNodes(DigitMap map);
     void initializeOutputNodes();
+    void initializeOutput(double answerVal);
     void initializeWeights();
 
     void updateWeights(int imageIndex);
 private:
     vector<inputNode> inputNodes;
     vector<outputNode> outputNodes;
+
     vector<vector<double> > weights;
+    vector<double> outputVect;
+    vector<double> correctOutputVect;
 
     int epochs;
 
     vector<DigitMap> trainingMaps;
-    
-    void printArrayAs2D(vector<double> list);
+
+
     vector<DigitMap> testMaps;
 
     double activationSum(int index);
+    void printArrayAs2D(vector<double> list);
+
     double g(double x);
     double g_prime(double x);
 
