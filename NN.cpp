@@ -51,13 +51,9 @@ void NeuralNetwork::initializeWeights() {
 
     // size - 1: bias node already added
     for(int i = 0; i < inputNodes.size() - 1; i++) {
-<<<<<<< HEAD
         double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
         //double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
-=======
-        double randNum = (((double) rand() / RAND_MAX) * 0.5) - 0.25; //initialize random weights between -0.15 and 0.15
-//        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
->>>>>>> origin/master
+
         weights.push_back(randNum);
     }
 
@@ -86,7 +82,7 @@ void NeuralNetwork::initializeOutput(double answerVal) {
     if (outputDim == 10) {
         for(int i = 0; i < outputDim; i++) {
             int expected;
-            if (outputDim == answerVal) {
+            if (i == answerVal) {
                 expected = 1;
             } else {
                 expected = 0;
