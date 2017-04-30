@@ -43,7 +43,7 @@ private:
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(vector<DigitMap> trainingMaps, int epochs, double learningRate, int outputDim);
+    NeuralNetwork(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps, int epochs, double learningRate, int outputDim);
     ~NeuralNetwork();
 
     void train();
@@ -65,10 +65,15 @@ private:
     int epochs;
 
     vector<DigitMap> trainingMaps;
+<<<<<<< HEAD
 
 
     void printArrayAs2D(vector<double> list);
+=======
+>>>>>>> origin/master
     vector<DigitMap> testMaps;
+
+    void printArrayAs2D(vector<double> list);
 
     double activationSum();
     double g(double x);

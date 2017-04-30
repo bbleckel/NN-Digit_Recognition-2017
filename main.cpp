@@ -163,15 +163,27 @@ int main (int argc, char** argv) {
     solutions.clear();
 
 
+
+    readFile(testFile, type);
+    testMaps = maps;
+    cout << testMaps.size() << " test maps" << endl;
+    // cout << trainingSolutions.size() << " training solutions" << endl;
+
+    // clear globals
+    maps.clear();
+    solutions.clear();
+
+
 //    // for testing
 //    readFile(testFile, type);
 //    testMaps = maps;
 //    // testSolutions = solutions;
 //    cout << testMaps.size() << " test maps" << endl;
 //    // cout << testSolutions.size() << " test solutions" << endl;
-    
-    NeuralNetwork n = NeuralNetwork(trainingMaps, 50, 0.1, 1);
+
+    NeuralNetwork n = NeuralNetwork(trainingMaps, testMaps, 50, 0.1, 1);
     n.train();
+    n.test();
 
 
 }
