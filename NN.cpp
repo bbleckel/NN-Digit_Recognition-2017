@@ -174,30 +174,36 @@ void NeuralNetwork::test() {
     int correctTestCount = 0;
     vector<int> digitsClassified(10, 0);
     vector<int> totalDigits(10, 0);
-    
+
     if(outputDim == 10) {
         double max = 0;
-        for(int n = 0; n < outputDim; n++) {
-            for (int i = 0; i < testMaps.size(); i++) {
-                initializeInputNodes(testMaps[i]);
-                
+        for (int i = 0; i < testMaps.size(); i++) {
+            initializeInputNodes(testMaps[i]);
+            double max = INT_MIN;
+            int digitClass = -1;
+            for (int n = 0; n < outputDim; n++) {
                 double sum = activationSum(n);
                 double output = g(sum);
-                
-                if (output == testMaps[i].value) {
-                    digitsClassified[testMaps[i].value]++;
-                    correctTestCount++;
+
+                if (output > max) {
+                    max = output;
+                    digitClass = n;
                 }
-                totalDigits[testMaps[i].value]++;
             }
+
+            if (digitClass == testMaps[i].value) {
+                digitsClassified[testMaps[i].value]++;
+                correctTestCount++;
+            }
+            totalDigits[testMaps[i].value]++;
         }
     } else {
 //        for (int i = 0; i < testMaps.size(); i++) {
 //            initializeInputNodes(testMaps[i]);
-//            
+//
 //            double sum = activationSum(n);
 //            double output = floor(g(sum) * 10);
-//            
+//
 //            if (output == testMaps[i].value) {
 //                digitsClassified[testMaps[i].value]++;
 //                correctTestCount++;
