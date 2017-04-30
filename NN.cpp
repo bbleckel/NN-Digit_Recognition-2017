@@ -150,8 +150,8 @@ void NeuralNetwork::updateWeights(int imageIndex) {
 }
 
 void NeuralNetwork::test() {
-    for (int i = 0; i < testMaps.size; i++) {
-
+    for (int i = 0; i < testMaps.size(); i++) {
+        
     }
 }
 
