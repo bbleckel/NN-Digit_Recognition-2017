@@ -111,9 +111,9 @@ void readFile(string fileName, int theType) {
 int main (int argc, char** argv) {
     string trainingFile;
     string testFile;
-    int type;
-    int numInputNodes;
-    int numOutputNodes;
+    int type; // 8 or 32
+    int numInputNodes; // 64 or 1024
+    int numOutputNodes; // 1 or 10
     int epochs;
     double learningRate;
 
