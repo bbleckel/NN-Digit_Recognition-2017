@@ -90,8 +90,10 @@ void NeuralNetwork::initializeOutputNodes(int answer) {
             }
         }
     } else { //outputDim = 1
+
         double correctOut = ((double)answer / 10.0);
         outputNode node = outputNode(0, correctOut);
+
         outputNodes.push_back(node);
     }
 }
@@ -246,6 +248,7 @@ double NeuralNetwork::activationSum(int index) {
 double NeuralNetwork::g(double x) {
     // activation function
     double b = 0.5 - x;
+    // double b = 0 - x;
     double e = exp(b);
     double r = 1 + e;
     double result = pow(r, -1);
@@ -257,7 +260,9 @@ double NeuralNetwork::g_prime(double x) {
     // derivative of activation function
     double e = exp(x);
     double numerator = sqrt(exp(1)) * e;
+    // double numerator = e;
     double denominator = pow(sqrt(exp(1)) + e, 2);
+    // double denominator = pow(e + 1, 2);
     double result = numerator / denominator;
 
     return result;
