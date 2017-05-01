@@ -160,7 +160,7 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     }
 }
 
-void NeuralNetwork::test() {
+double NeuralNetwork::test() {
     cout << "Testing: ..." << endl;
     int correctTestCount = 0;
     vector<int> digitsClassified(10, 0);
@@ -208,14 +208,18 @@ void NeuralNetwork::test() {
 
     cout << "Table of correctly classified digits vs total digit count:" << endl;
     for (int i = 0; i < digitsClassified.size(); i++) {
-        cout << "--------|--------\t-------" << endl;
-        cout << i << "\t|\t" << digitsClassified[i] << "\t| " << totalDigits[i] << " |" << endl;
+        cout << "--------|--------\t------------------" << endl;
+        cout << i << "\t|\t" << digitsClassified[i] << "\t| " << totalDigits[i];
+        cout << " | " << ((double)digitsClassified[i]/(double)totalDigits[i])*100;
+        cout << "\% |" << endl;
     }
-    cout << "--------|--------\t-------" << endl;
+    cout << "--------|--------\t------------------" << endl;
+
+    return ((double)correctTestCount/(double)testMaps.size())*100.0;
 }
 
 //train the network
-void NeuralNetwork::train() {
+vector<double> NeuralNetwork::train() {
     initializeOutputNodes(-1); //create vector of output nodes
     initializeInputNodes(trainingMaps[0]); //create vector of input nodes
     initializeWeights();
@@ -223,13 +227,14 @@ void NeuralNetwork::train() {
    //     printArrayAs2D(weights[i]);
    // }
 
+   vector<double> correctPercVect;
+
     for (int e = 0; e < epochs; e++) {
         cout << "Epoch " << e + 1 << endl;
         correctCount = 0;
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
 
-    //    for (int i = 0; i < 4; i++) {
             initializeOutputNodes(trainingMaps[i].value); //create vector of output nodes
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
 
@@ -239,7 +244,6 @@ void NeuralNetwork::train() {
             double max = 0;
             int result = -1;
             for(int p = 0; p < outputNodes.size(); p++) {
-            //    cout << "Value of node " << p << " is " << outputNodes[p].value << ", looking for " << trainingMaps[i].value << endl;
                 if(outputNodes[p].value > max) {
                     max = outputNodes[p].value;
                     result = p;
@@ -254,7 +258,11 @@ void NeuralNetwork::train() {
         cout << "Correct classifications: " << correctCount << endl;
         cout << "Total classifications: " << totalCount << endl;
         cout << "Ratio: " << correctCount / (double) totalCount << endl;
+
+        correctPercVect.push_back((correctCount / (double) totalCount)*100);
     }
+
+    return correctPercVect;
 }
 
 double NeuralNetwork::activationSum(int index) {
@@ -268,44 +276,21 @@ double NeuralNetwork::activationSum(int index) {
 }
 
 double NeuralNetwork::g(double x) {
-   // cout << "g for " << x << endl;
-    if(x > 200) {
-        // avoid nan
-    //    cout << "g returning 1" << endl;
-    }
     // activation function
     double b = 0.5 - x;
-   // cout << "b = " << b << endl;
     double e = exp(b);
-   // cout << "e = " << e << endl;
-
     double r = 1 + e;
-   // cout << "r = " << r << endl;
-
     double result = pow(r, -1);
-   // cout << "Returning " << result << endl;
+
     return result;
 }
 
 double NeuralNetwork::g_prime(double x) {
-    if(x > 200) {
-        // avoid nan
-        return 0;
-    }
     // derivative of activation function
-   // cout << "for " << x << endl;
     double e = exp(x);
-   // cout << "e = " << e << endl;
-
     double numerator = sqrt(exp(1)) * e;
-   // cout << "num = " << numerator << endl;
-
     double denominator = pow(sqrt(exp(1)) + e, 2);
-   // cout << "denom = " << denominator << endl;
-
     double result = numerator / denominator;
-   // cout << "result = " << result << endl;
-
-
+    
     return result;
 }

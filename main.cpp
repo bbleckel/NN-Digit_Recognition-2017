@@ -108,13 +108,67 @@ void readFile(string fileName, int theType) {
 
 }
 
+double LRs[3] = {0.1, 0.5, 1.0};
+int outputDims[2] = {1, 10};
+int types[2] = {8, 32};
+
+void test(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps) {
+    int epochs = 50;
+    int num = 0;
+    for (int o = 0; o < 2; o++) {
+        for (int t = 0; t < 2; t++) {
+            for (int lr = 0; lr < 3; lr++) {
+                double learningRate = LRs[lr];
+                int outputDim = outputDims[o];
+                int type = types[t];
+                string typeString;
+                if (type == 8) {
+                    typeString = "8x8-integer-inputs/optdigits-8x8-int.";
+                } else {
+                    typeString = "32x32-bitmaps/optdigits-32x32.";
+                }
+
+                string trainingFile = typeString + "tra";
+                string testFile = typeString + "tes";
+
+                readFile(trainingFile, type);
+                trainingMaps = maps;
+                // clear globals
+                maps.clear();
+                solutions.clear();
+
+                readFile(testFile, type);
+                testMaps = maps;
+                // clear globals
+                maps.clear();
+                solutions.clear();
+
+                NeuralNetwork n = NeuralNetwork(trainingMaps, testMaps, epochs, learningRate, outputDim);
+                vector<double> training = n.train();
+                double percentCorrect = n.test();
+
+                cout << "\\begin{filecontents*}{data" << num << ".txt}" << endl;
+                //only go to size() - 1 (i.e. exclude the last one) because the last one is the optimal
+                for(int i = 0; i < training.size(); i++) {
+                    cout << "\t" << i << "  " << training[i] << endl;
+                }
+                cout << "\\end{filecontents*}" << endl;
+                cout << "% Percent correct on test files: " << percentCorrect << endl;
+                cout << endl << endl;
+
+                num++;
+            }
+        }
+    }
+}
+
 int main (int argc, char** argv) {
     string trainingFile;
     string testFile;
     int type; // 8 or 32
     int numInputNodes; // 64 or 1024
     int numOutputNodes; // 1 or 10
-    int epochs = 10;
+    int epochs = 50;
     double learningRate;
 
 

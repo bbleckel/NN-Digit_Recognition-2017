@@ -44,8 +44,8 @@ public:
     NeuralNetwork(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps, int epochs, double learningRate, int outputDim);
     ~NeuralNetwork();
 
-    void train();
-    void test();
+    vector<double> train();
+    double test();
 
     void initializeInputNodes(DigitMap map);
     void initializeOutputNodes(int answer);
