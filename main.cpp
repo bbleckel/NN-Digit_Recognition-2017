@@ -168,7 +168,7 @@ int main (int argc, char** argv) {
     int type; // 8 or 32
     int numInputNodes; // 64 or 1024
     int numOutputNodes = 1; // 1 or 10
-    int epochs = 10;
+    int epochs = 50;
     double learningRate = 0.01;
 
 
