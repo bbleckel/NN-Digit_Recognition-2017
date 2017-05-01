@@ -91,7 +91,8 @@ void NeuralNetwork::initializeOutputNodes(int answer) {
         }
     } else { //outputDim = 1
         double correctOut = answer / 10;
-        outputNode node = outputNode(0, correctOut);
+        double randNum = ((double) rand() / RAND_MAX);
+        outputNode node = outputNode(randNum, correctOut);
         outputNodes.push_back(node);
     }
 }
