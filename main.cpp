@@ -18,13 +18,13 @@ void printInfo() {
 	cout << "    trainingFile   = name of training file from which to read (string):" << endl;
 	cout << "    testFile       = name of test file from which to read (string)" << endl;
     cout << "    type           = 32x32 bitmap or 8x8 down-sampled image (32 or 8, int)" << endl;
-    cout << "    inputNodes     = number of input nodes (int)" << endl;
-	cout << "    outputNodes    = number of output nodes (int)" << endl;
+    cout << "    inputNodes     = number of input nodes (1024 or 64, int)" << endl;
+	cout << "    outputNodes    = number of output nodes (1 or 10, int)" << endl;
 	cout << "    epochs         = number of epochs (iterations) to perform (int)" << endl;
     cout << "    learningRate   = learning rate for network (double)" << endl;
     cout << "SAMPLE INPUTS:" << endl;
-    cout << "./main 32x32-bitmaps/optdigits-32x32.tra 32x32-bitmaps/optdigits-32x32.tes 32" << endl;
-    cout << "./main 8x8-integer-inputs/optdigits-8x8-int.tra 8x8-integer-inputs/optdigits-8x8-int.tes 8" << endl;
+    cout << "./main 32x32-bitmaps/optdigits-32x32.tra 32x32-bitmaps/optdigits-32x32.tes 32 1024 10 50 0.01" << endl;
+    cout << "./main 8x8-integer-inputs/optdigits-8x8-int.tra 8x8-integer-inputs/optdigits-8x8-int.tes 8 64 10 50 0.01" << endl;
     cout << endl;
 }
 
@@ -167,9 +167,9 @@ int main (int argc, char** argv) {
     string testFile;
     int type; // 8 or 32
     int numInputNodes; // 64 or 1024
-    int numOutputNodes = 1; // 1 or 10
-    int epochs = 50;
-    double learningRate = 0.01;
+    int numOutputNodes; // 1 or 10
+    int epochs;
+    double learningRate;
 
 
     vector<DigitMap> trainingMaps;
@@ -179,7 +179,7 @@ int main (int argc, char** argv) {
     vector<int> testSolutions;
 
     // change this to match the number of parameters we are using
-    if (argc != 4) {
+    if (argc != 8) {
         // incorrect number of arguments
         printInfo();
         exit(1);
@@ -189,10 +189,10 @@ int main (int argc, char** argv) {
         trainingFile = argv[1];
         testFile = argv[2];
         type = atoi(argv[3]);
-        // numInputNodes = atoi(argv[4]);
-        // numOutputNodes = atoi(argv[5]);
-        // epochs = atoi(argv[6]);
-        // learningRate = atof(argv[7]);
+        numInputNodes = atoi(argv[4]);
+        numOutputNodes = atoi(argv[5]);
+        epochs = atoi(argv[6]);
+        learningRate = atof(argv[7]);
 
     }
     cout << "YOUR INPUT VALUES:" << endl;
