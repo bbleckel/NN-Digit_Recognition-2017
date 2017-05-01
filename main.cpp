@@ -61,14 +61,12 @@ void readFile(string fileName, int theType) {
                     lineVect.erase(lineVect.begin());
                 }
                 map.push_back(row);
-                // for (int m = 0; m < row.size(); m++)
-                //     cout << row[m] << ",";
-                // cout << endl;
                 row.clear();
             }
             solutions.push_back(lineVect[0]);
             // cout << solutions.back() << endl;
             maps.push_back(DigitMap(solutions.back(), map));
+            map.clear();
         }
     } else {    //type == 32
         // skip first three lines of file
@@ -93,31 +91,18 @@ void readFile(string fileName, int theType) {
             }
         }
     }
-
-   // for(int i = 0; i < solutions.size(); i++) {
-   //     cout << solutions[i] << endl;
-   // }
-   // cout << solutions.size() << " solutions"<< endl;
-   // cout << maps.size() << " maps" << endl;
-    // for(int i = 0; i < maps[0].map.size(); i++) {
-    //     for(int j = 0; j < maps[0].map[i].size(); j++) {
-    //         cout << maps[0].map[i][j];
-    //     }
-    //     cout << "\n";
-    // }
-
 }
 
-double LRs[3] = {0.1, 0.5, 1.0};
+double LRs[4] = {0.01, 0.1, 0.5, 1.0};
 int outputDims[2] = {1, 10};
 int types[2] = {8, 32};
 
-void test(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps) {
+void test() {
     int epochs = 50;
     int num = 0;
-    for (int o = 0; o < 2; o++) {
-        for (int t = 0; t < 2; t++) {
-            for (int lr = 0; lr < 3; lr++) {
+    for (int t = 0; t < 2; t++) {
+        for (int o = 0; o < 2; o++) {
+            for (int lr = 0; lr < 4; lr++) {
                 double learningRate = LRs[lr];
                 int outputDim = outputDims[o];
                 int type = types[t];
@@ -132,13 +117,13 @@ void test(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps) {
                 string testFile = typeString + "tes";
 
                 readFile(trainingFile, type);
-                trainingMaps = maps;
+                vector<DigitMap> trainingMaps = maps;
                 // clear globals
                 maps.clear();
                 solutions.clear();
 
                 readFile(testFile, type);
-                testMaps = maps;
+                vector<DigitMap> testMaps = maps;
                 // clear globals
                 maps.clear();
                 solutions.clear();
@@ -147,13 +132,15 @@ void test(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps) {
                 vector<double> training = n.train();
                 double percentCorrect = n.test();
 
+                cout << "%" << type << "x" << type << " file, with LR = " << learningRate;
+                cout << ", and outputDim = " << outputDim << endl;
+                cout << "%Total percent correct when tested on test files: " << percentCorrect << endl;
                 cout << "\\begin{filecontents*}{data" << num << ".txt}" << endl;
                 //only go to size() - 1 (i.e. exclude the last one) because the last one is the optimal
                 for(int i = 0; i < training.size(); i++) {
                     cout << "\t" << i << "  " << training[i] << endl;
                 }
                 cout << "\\end{filecontents*}" << endl;
-                cout << "% Percent correct on test files: " << percentCorrect << endl;
                 cout << endl << endl;
 
                 num++;
@@ -163,12 +150,15 @@ void test(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps) {
 }
 
 int main (int argc, char** argv) {
+    test();
+    exit(0);
+
     string trainingFile;
     string testFile;
     int type; // 8 or 32
     int numInputNodes; // 64 or 1024
     int numOutputNodes = 1; // 1 or 10
-    int epochs = 10;
+    int epochs = 50;
     double learningRate = 0.01;
 
 
