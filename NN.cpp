@@ -30,7 +30,7 @@ outputNode::~outputNode() {
 }
 
 NeuralNetwork::NeuralNetwork(vector<DigitMap> trainingMaps, vector<DigitMap> testMaps, int epochs, double learningRate, int outputDim) {
-    cout << "Perceptron created!" << endl;
+    // cout << "Perceptron created!" << endl;
 
     this->trainingMaps = trainingMaps;
     this->testMaps = testMaps;
@@ -103,10 +103,6 @@ void NeuralNetwork::printArrayAs2D(vector<double> list) {
         if(i % trainingMaps[0].map.size() == 0) {
             cout << endl;
         }
-    //    int row; // corresponds to y coord.
-    //    int col; // corresponds to x coord.
-    //    row = floor(i / trainingMaps[imageIndex].map.size());
-    //    col = i - row * trainingMaps[imageIndex].map.size();
         cout << list[i] << " ";
     }
 }
@@ -134,7 +130,6 @@ void NeuralNetwork::updateWeights(int imageIndex) {
 }
 
 double NeuralNetwork::test() {
-    cout << "Testing: ..." << endl;
     int correctTestCount = 0;
     vector<int> digitsClassified(10, 0);
     vector<int> totalDigits(10, 0);
@@ -196,14 +191,11 @@ vector<double> NeuralNetwork::train() {
     initializeOutputNodes(-1); //create vector of output nodes
     initializeInputNodes(trainingMaps[0]); //create vector of input nodes
     initializeWeights();
-   // for(int i = 0; i < weights.size(); i++) {
-   //     printArrayAs2D(weights[i]);
-   // }
 
    vector<double> correctPercVect;
 
     for (int e = 0; e < epochs; e++) {
-        cout << "Epoch " << e + 1 << endl;
+        // cout << "Epoch " << e + 1 << endl;
         correctCount = 0;
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
@@ -218,7 +210,6 @@ vector<double> NeuralNetwork::train() {
             int result = -1;
             if (outputDim == 10) {
                 for(int p = 0; p < outputNodes.size(); p++) {
-                    //    cout << "Value of node " << p << " is " << outputNodes[p].value << ", looking for " << trainingMaps[i].value << endl;
                     if(outputNodes[p].value > max) {
                         max = outputNodes[p].value;
                         result = p;
@@ -228,7 +219,6 @@ vector<double> NeuralNetwork::train() {
                 double val = outputNodes[0].value * 10.0;
                 result = floor(val);
             }
-        //    cout << "Max is " << result << ", Correct is " << trainingMaps[i].value << endl;
             if(result == trainingMaps[i].value) {
                 correctCount++;
             }
