@@ -90,7 +90,7 @@ void NeuralNetwork::initializeOutputNodes(int answer) {
             }
         }
     } else { //outputDim = 1
-        double correctOut = answer / 10;
+        double correctOut = ((double)answer / 10.0);
         outputNode node = outputNode(0, correctOut);
         outputNodes.push_back(node);
     }
@@ -108,7 +108,6 @@ void NeuralNetwork::printArrayAs2D(vector<double> list) {
         cout << list[i] << " ";
     }
 }
-
 
 void NeuralNetwork::updateWeights(int imageIndex) {
     for(int j = 0; j < outputDim; j++) {
@@ -224,7 +223,7 @@ vector<double> NeuralNetwork::train() {
                     }
                 }
             } else { // outputDim = 1
-                double val = outputNodes[0].value * 10;
+                double val = outputNodes[0].value * 10.0;
                 result = floor(val);
             }
         //    cout << "Max is " << result << ", Correct is " << trainingMaps[i].value << endl;
