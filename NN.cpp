@@ -49,13 +49,11 @@ void NeuralNetwork::initializeWeights() {
     weights.clear();
     for(int i = 0; i < outputDim; i++) {
         vector<double> tempWeights;
-        // tempWeights.push_back(1); // bias node
+        tempWeights.push_back(1); // bias node
 
         // size - 1: bias node already added
-        for(int i = 0; i < inputNodes.size(); i++) {// - 1; i++) {
+        for(int i = 0; i < inputNodes.size() - 1; i++) {
             double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
-            //        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
-    //            tempWeights.push_back(0);
             tempWeights.push_back(randNum);
         }
         weights.push_back(tempWeights);
@@ -78,29 +76,6 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
     }
 }
 
-// initialize the output vector based on the correct answer value for the image
-void NeuralNetwork::initializeOutput(double answerVal) {
-    outputVect.clear();
-    correctOutputVect.clear();
-    if (outputDim == 10) {
-        for(int i = 0; i < outputDim; i++) {
-            int expected;
-            if (i == answerVal) {
-                expected = 1;
-            } else {
-                expected = 0;
-            }
-            correctOutputVect.push_back(expected);
-            outputVect.push_back(0);
-        }
-
-    } else { // outputDim = 1
-        double expected = answerVal / 10;
-        correctOutputVect.push_back(expected);
-        outputVect.push_back(0.0);
-    }
-}
-
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes(int answer) {
     outputNodes.clear();
@@ -115,7 +90,8 @@ void NeuralNetwork::initializeOutputNodes(int answer) {
             }
         }
     } else { //outputDim = 1
-        outputNode node = outputNode(0, answer);
+        double correctOut = answer / 10;
+        outputNode node = outputNode(0, correctOut);
         outputNodes.push_back(node);
     }
 }
@@ -138,9 +114,7 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     for(int j = 0; j < outputDim; j++) {
         double sum = activationSum(j);
         double output = g(sum);
-
         outputNodes[j].value = output;
-
         double deriv = g_prime(sum);
         double error = outputNodes[j].expectedValue - output;
 
@@ -149,10 +123,8 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         double biasUpdate = learningRate * error * deriv;
         weights[j][0] += biasUpdate;
 
-        for (int i = 1; i < weights[j].size(); i++) {
-
+        for(int i = 1; i < weights[j].size(); i++) {
             double update = learningRate * error * deriv * inputNodes[i].value;
-
 
             update += weights[j][i];
             weights[j][i] = update;
@@ -187,19 +159,19 @@ void NeuralNetwork::test() {
             }
             totalDigits[testMaps[i].value]++;
         }
-    } else {
-        //        for (int i = 0; i < testMaps.size(); i++) {
-        //            initializeInputNodes(testMaps[i]);
-        //
-        //            double sum = activationSum(n);
-        //            double output = floor(g(sum) * 10);
-        //
-        //            if (output == testMaps[i].value) {
-        //                digitsClassified[testMaps[i].value]++;
-        //                correctTestCount++;
-        //            }
-        //            totalDigits[testMaps[i].value]++;
-        //        }
+    } else { // outputDim = 1
+               for (int i = 0; i < testMaps.size(); i++) {
+                   initializeInputNodes(testMaps[i]);
+
+                   double sum = activationSum(0);
+                   double output = floor(g(sum) * 10);
+
+                   if (output == testMaps[i].value) {
+                       digitsClassified[testMaps[i].value]++;
+                       correctTestCount++;
+                   }
+                   totalDigits[testMaps[i].value]++;
+               }
     }
 
     cout << endl << "Tested " << testMaps.size() << " images on the Network." << endl;
@@ -229,7 +201,6 @@ void NeuralNetwork::train() {
         totalCount = 0;
         for (int i = 0; i < trainingMaps.size(); i++) {
 
-    //    for (int i = 0; i < 4; i++) {
             initializeOutputNodes(trainingMaps[i].value); //create vector of output nodes
             initializeInputNodes(trainingMaps[i]); //create vector of input nodes
 
@@ -238,13 +209,19 @@ void NeuralNetwork::train() {
 
             double max = 0;
             int result = -1;
-            for(int p = 0; p < outputNodes.size(); p++) {
-            //    cout << "Value of node " << p << " is " << outputNodes[p].value << ", looking for " << trainingMaps[i].value << endl;
-                if(outputNodes[p].value > max) {
-                    max = outputNodes[p].value;
-                    result = p;
+            if (outputDim == 10) {
+                for(int p = 0; p < outputNodes.size(); p++) {
+                    //    cout << "Value of node " << p << " is " << outputNodes[p].value << ", looking for " << trainingMaps[i].value << endl;
+                    if(outputNodes[p].value > max) {
+                        max = outputNodes[p].value;
+                        result = p;
+                    }
                 }
+            } else { // outputDim = 1
+                double val = outputNodes[0].value * 10;
+                result = floor(val);
             }
+        //    cout << "Max is " << result << ", Correct is " << trainingMaps[i].value << endl;
             if(result == trainingMaps[i].value) {
                 correctCount++;
             }
