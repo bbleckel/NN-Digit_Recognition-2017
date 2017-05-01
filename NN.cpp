@@ -259,7 +259,6 @@ void NeuralNetwork::train() {
                     result = p;
                 }
             }
-//            cout << "Max is " << result << ", Correct is " << trainingMaps[i].value << endl;
             if(result == trainingMaps[i].value) {
                 correctCount++;
             }
