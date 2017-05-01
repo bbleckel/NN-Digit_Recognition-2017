@@ -49,13 +49,13 @@ void NeuralNetwork::initializeWeights() {
     weights.clear();
     for(int i = 0; i < outputDim; i++) {
         vector<double> tempWeights;
-        tempWeights.push_back(1); // bias node
+        // tempWeights.push_back(1); // bias node
 
         // size - 1: bias node already added
-        for(int i = 0; i < inputNodes.size() - 1; i++) {
+        for(int i = 0; i < inputNodes.size(); i++) {// - 1; i++) {
             double randNum = (((double) rand() / RAND_MAX) * 0.3) - 0.15; //initialize random weights between -0.15 and 0.15
             //        double randNum = (((double) rand() / RAND_MAX) * 2) - 1; //initialize random weights between -1 and 1
-//            tempWeights.push_back(0);
+    //            tempWeights.push_back(0);
             tempWeights.push_back(randNum);
         }
         weights.push_back(tempWeights);
@@ -104,7 +104,6 @@ void NeuralNetwork::initializeOutput(double answerVal) {
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes(int answer) {
     outputNodes.clear();
-    int initValue; // whatever we're initializing the values to
     if (outputDim == 10) {
         for (int i = 0; i < outputDim; i++) {
             if(i == answer) {
@@ -139,37 +138,39 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     for(int j = 0; j < outputDim; j++) {
         double sum = activationSum(j);
         double output = g(sum);
-//        cout << "Sum = " << sum << ", output = " << output << endl;
+    //        cout << "Sum = " << sum << ", output = " << output << endl;
         outputNodes[j].value = output;
         //    double output = g(sum);
         double deriv = g_prime(sum);
         double error = outputNodes[j].expectedValue - output;
-//        cout << "For " << j << ", correct = " << outputNodes[j].expectedValue << ", output = " << output << endl;
+    //        cout << "For " << j << ", correct = " << outputNodes[j].expectedValue << ", output = " << output << endl;
 
         // update bias node (first in weights)
         double biasWeight = weights[j][0];
         double biasUpdate = learningRate * error * deriv;
         weights[j][0] += biasUpdate;
 
-        for(int i = 1; i < weights[j].size(); i++) {
-            int row; // corresponds to y coord.
-            int col; // corresponds to x coord.
-            row = floor(i / trainingMaps[imageIndex].map.size());
-            col = i - row * trainingMaps[imageIndex].map.size();
+        for (int i = 1; i < weights[j].size(); i++) {
+    //         int row; // corresponds to y coord.
+    //         int col; // corresponds to x coord.
+    //         row = floor(i / trainingMaps[imageIndex].map.size());
+    //         col = i - row * trainingMaps[imageIndex].map.size();
+    //
+    //         //        cout << "(row, col) " << row << ", " << col << endl;
+    //         if(trainingMaps[imageIndex].map[col][row] == 1) {
+    // //                cout << "Initial weight = " << weights[j][i] << ", sum = " << sum << ", g = " << g(sum) << endl;
+    //         }
+    //         //        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
+    //         double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
 
-            //        cout << "(row, col) " << row << ", " << col << endl;
-            if(trainingMaps[imageIndex].map[col][row] == 1) {
-//                cout << "Initial weight = " << weights[j][i] << ", sum = " << sum << ", g = " << g(sum) << endl;
-            }
-            //        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
-            double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
+            double update = learningRate * error * deriv * inputNodes[i].value;
 
 
             update += weights[j][i];
             weights[j][i] = update;
-            if(trainingMaps[imageIndex].map[col][row] == 1) {
-//                cout << "New weight = " << weights[j][i] << endl;;
-            }
+    //         if(trainingMaps[imageIndex].map[col][row] == 1) {
+    // //                cout << "New weight = " << weights[j][i] << endl;;
+    //         }
         }
     }
 }

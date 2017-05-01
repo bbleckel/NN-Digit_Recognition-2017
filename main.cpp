@@ -114,7 +114,7 @@ int main (int argc, char** argv) {
     int type; // 8 or 32
     int numInputNodes; // 64 or 1024
     int numOutputNodes; // 1 or 10
-    int epochs = 20;
+    int epochs = 10;
     double learningRate;
 
 
@@ -181,7 +181,7 @@ int main (int argc, char** argv) {
 //    cout << testMaps.size() << " test maps" << endl;
 //    // cout << testSolutions.size() << " test solutions" << endl;
 
-    NeuralNetwork n = NeuralNetwork(trainingMaps, testMaps, 10, 0.01, 10);
+    NeuralNetwork n = NeuralNetwork(trainingMaps, testMaps, epochs, 0.01, 10);
     n.train();
     n.test();
 
