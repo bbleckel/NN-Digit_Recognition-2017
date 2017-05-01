@@ -138,12 +138,11 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     for(int j = 0; j < outputDim; j++) {
         double sum = activationSum(j);
         double output = g(sum);
-    //        cout << "Sum = " << sum << ", output = " << output << endl;
+
         outputNodes[j].value = output;
-        //    double output = g(sum);
+
         double deriv = g_prime(sum);
         double error = outputNodes[j].expectedValue - output;
-    //        cout << "For " << j << ", correct = " << outputNodes[j].expectedValue << ", output = " << output << endl;
 
         // update bias node (first in weights)
         double biasWeight = weights[j][0];
@@ -151,26 +150,12 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         weights[j][0] += biasUpdate;
 
         for (int i = 1; i < weights[j].size(); i++) {
-    //         int row; // corresponds to y coord.
-    //         int col; // corresponds to x coord.
-    //         row = floor(i / trainingMaps[imageIndex].map.size());
-    //         col = i - row * trainingMaps[imageIndex].map.size();
-    //
-    //         //        cout << "(row, col) " << row << ", " << col << endl;
-    //         if(trainingMaps[imageIndex].map[col][row] == 1) {
-    // //                cout << "Initial weight = " << weights[j][i] << ", sum = " << sum << ", g = " << g(sum) << endl;
-    //         }
-    //         //        cout << "Position here is " << trainingMaps[imageIndex].map[col][row] << endl;
-    //         double update = learningRate * error * deriv * trainingMaps[imageIndex].map[col][row];
 
             double update = learningRate * error * deriv * inputNodes[i].value;
 
 
             update += weights[j][i];
             weights[j][i] = update;
-    //         if(trainingMaps[imageIndex].map[col][row] == 1) {
-    // //                cout << "New weight = " << weights[j][i] << endl;;
-    //         }
         }
     }
 }
