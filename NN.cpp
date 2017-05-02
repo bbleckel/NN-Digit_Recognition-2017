@@ -45,6 +45,8 @@ NeuralNetwork::~NeuralNetwork() {
 
 }
 
+//make a outputDim X inputNodes.size() vector of weights
+//this is the part that connects every input node to every output node
 void NeuralNetwork::initializeWeights() {
     weights.clear();
     for(int i = 0; i < outputDim; i++) {
@@ -64,9 +66,12 @@ void NeuralNetwork::initializeWeights() {
 void NeuralNetwork::initializeInputNodes(DigitMap map) {
     inputNodes.clear();
 
+    //add bias node
     inputNode biasNode = inputNode(1);
     inputNodes.push_back(biasNode);
 
+    //unravel the 2-D image into a single vector of input nodes with values
+    //corrsponding to the 0s and 1s from the image representation
     for(int i = 0; i < map.map.size(); i++) {
         for(int j = 0; j < map.map[i].size(); j++) {
             // this node has value corresponding to the value in the map
@@ -79,19 +84,20 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes(int answer) {
     outputNodes.clear();
+    //build a vector of input nodes
     if (outputDim == 10) {
         for (int i = 0; i < outputDim; i++) {
             if(i == answer) {
-                outputNode node = outputNode(i, 1);
+                outputNode node = outputNode(i, 1); //set the node at answer to have expected value 1
                 outputNodes.push_back(node);
             } else {
-                outputNode node = outputNode(i, 0);
+                outputNode node = outputNode(i, 0); //set others to expected value 0
                 outputNodes.push_back(node);
             }
         }
     } else { //outputDim = 1
 
-        double correctOut = ((double)answer / 10.0);
+        double correctOut = ((double)answer / 10.0); //make expected value answer/10
         outputNode node = outputNode(0, correctOut);
 
         outputNodes.push_back(node);
@@ -107,11 +113,14 @@ void NeuralNetwork::printArrayAs2D(vector<double> list) {
     }
 }
 
+//update all weights in the weight vector
 void NeuralNetwork::updateWeights(int imageIndex) {
+    //iterate through all output nodes
     for(int j = 0; j < outputDim; j++) {
+        //calculate all constant parts of weight update equation
         double sum = activationSum(j);
         double output = g(sum);
-        outputNodes[j].value = output;
+        outputNodes[j].value = output; //set output node value
         double deriv = g_prime(sum);
         double error = outputNodes[j].expectedValue - output;
 
@@ -120,6 +129,7 @@ void NeuralNetwork::updateWeights(int imageIndex) {
         double biasUpdate = learningRate * error * deriv;
         weights[j][0] += biasUpdate;
 
+        //update all weights between each input node and the current output node
         for(int i = 1; i < weights[j].size(); i++) {
             double update = learningRate * error * deriv * inputNodes[i].value;
 
@@ -129,14 +139,20 @@ void NeuralNetwork::updateWeights(int imageIndex) {
     }
 }
 
+//run the network on the test set
 double NeuralNetwork::test() {
     int correctTestCount = 0;
     vector<int> digitsClassified(10, 0);
     vector<int> totalDigits(10, 0);
 
+    //if output dim is 10, we will calculate the classification differently
     if(outputDim == 10) {
+        //do each input image
         for (int i = 0; i < testMaps.size(); i++) {
-            initializeInputNodes(testMaps[i]);
+            initializeInputNodes(testMaps[i]); //initialize the input nodes from
+                                                //the current image
+
+            //find highest classification of output vector
             double max = INT_MIN;
             int digitClass = -1;
             for (int n = 0; n < outputDim; n++) {
@@ -149,27 +165,35 @@ double NeuralNetwork::test() {
                 }
             }
 
+            //count classifications of each digit
             if (digitClass == testMaps[i].value) {
                 digitsClassified[testMaps[i].value]++;
                 correctTestCount++;
             }
+            //count total classifications
             totalDigits[testMaps[i].value]++;
         }
     } else { // outputDim = 1
-               for (int i = 0; i < testMaps.size(); i++) {
-                   initializeInputNodes(testMaps[i]);
+        //do each input image
+       for (int i = 0; i < testMaps.size(); i++) {
+           initializeInputNodes(testMaps[i]);//initialize the input nodes from
+                                               //the current image
 
-                   double sum = activationSum(0);
-                   double output = floor(g(sum) * 10);
+           //find classification
+           double sum = activationSum(0);
+           double output = floor(g(sum) * 10);
 
-                   if (output == testMaps[i].value) {
-                       digitsClassified[testMaps[i].value]++;
-                       correctTestCount++;
-                   }
-                   totalDigits[testMaps[i].value]++;
-               }
+           //count classifications of each digit
+           if (digitClass == testMaps[i].value) {
+               digitsClassified[testMaps[i].value]++;
+               correctTestCount++;
+           }
+           //count total classifications
+           totalDigits[testMaps[i].value]++;
+       }
     }
 
+    //print out results in a table
     cout << endl << "Tested " << testMaps.size() << " images on the Network." << endl;
     cout << "Correctly classified " << correctTestCount << " (";
     cout << ((double)correctTestCount/(double)testMaps.size())*100.0 << "\%)." << endl << endl;
@@ -208,6 +232,8 @@ vector<double> NeuralNetwork::train() {
 
             double max = 0;
             int result = -1;
+            //find the correct classification and compare to actual answer
+            //if output dim is 10
             if (outputDim == 10) {
                 for(int p = 0; p < outputNodes.size(); p++) {
                     if(outputNodes[p].value > max) {
@@ -235,6 +261,7 @@ vector<double> NeuralNetwork::train() {
     return correctPercVect;
 }
 
+//calculate the activation sum, which is the sum of all input values multiplied by the weights
 double NeuralNetwork::activationSum(int index) {
     double sum = 0;
 
@@ -245,10 +272,10 @@ double NeuralNetwork::activationSum(int index) {
     return sum;
 }
 
+//activation function g
 double NeuralNetwork::g(double x) {
     // activation function
-    double b = 0.5 - x;
-    // double b = 0 - x;
+    double b = 0.5 - x; //shift by 0.5
     double e = exp(b);
     double r = 1 + e;
     double result = pow(r, -1);
@@ -256,6 +283,7 @@ double NeuralNetwork::g(double x) {
     return result;
 }
 
+//derivative of activation function g
 double NeuralNetwork::g_prime(double x) {
     // derivative of activation function
     double e = exp(x);
