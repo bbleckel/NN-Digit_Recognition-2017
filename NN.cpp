@@ -184,7 +184,7 @@ double NeuralNetwork::test() {
            double output = floor(g(sum) * 10);
 
            //count classifications of each digit
-           if (digitClass == testMaps[i].value) {
+           if (output == testMaps[i].value) {
                digitsClassified[testMaps[i].value]++;
                correctTestCount++;
            }
