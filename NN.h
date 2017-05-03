@@ -33,7 +33,6 @@ class outputNode {
 public:
     outputNode(double value, double expected);
     ~outputNode();
-    vector<double> weights;
     double value;
     double expectedValue; //doesn't change
 

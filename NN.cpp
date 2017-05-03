@@ -84,7 +84,7 @@ void NeuralNetwork::initializeInputNodes(DigitMap map) {
 //initialize the output node(s) based on the outputDim
 void NeuralNetwork::initializeOutputNodes(int answer) {
     outputNodes.clear();
-    //build a vector of input nodes
+    //build a vector of output nodes
     if (outputDim == 10) {
         for (int i = 0; i < outputDim; i++) {
             if(i == answer) {
